@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
+
+const mongoDbError = require('mongoose-mongodb-errors');
+
 mongoose.Promise=global.Promise;
+
+mongoose.plugin(mongoDbError);
 
 
 // mongoose.connect('mongodb://localhost:5000/node-mongo',{ useNewUrlParser:true });
