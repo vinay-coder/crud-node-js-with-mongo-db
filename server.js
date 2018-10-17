@@ -7,14 +7,16 @@ require('express-async-errors');  // this is working only in async and await rou
 // database connection
 require('./mongo');
 
+
 // models 
 require('./models/Post');
+require('./models/Comment');
 
 app.use(bodyParser.json())
    .use(morgan());
 
 
-const Post = mongoose.model("Post");
+// const Post = mongoose.model("Post");
 
 app.use('/posts',require('./routes/post'));   // for post routing
 
@@ -80,7 +82,17 @@ app.use((req, res, next)=>{
 	next(error);
 });
 
-// error handling
+// error handling for production
+if(app.get("env") === "production")
+{
+	app.use((error, req, res, next)=>{
+		res.status(req.status || 500);
+		res.send({message:error.message});
+	});
+
+}
+
+// error handling for developement
 app.use((error, req, res, next)=>{
 	res.status(req.status || 500);
 	res.send({message:error.message,stack:error.stack});
